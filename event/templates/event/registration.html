@@ -1,0 +1,158 @@
+{% extends "event/layout.html" %}
+
+{% block title %}Register for Event - EventHub{% endblock %}
+
+{% block header %}Event Registration{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+            {{ event.name }}
+        </h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            {{ event.date|date:"F j, Y" }} at {{ event.time|time:"g:i A" }}
+        </p>
+    </div>
+    
+    <div class="px-4 py-5 sm:px-6">
+        <div class="mb-8">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3 text-sm text-gray-500">
+                    {{ event.location }}
+                </div>
+            </div>
+            <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                    {{ event.desc }}
+                </p>
+            </div>
+            <div class="mt-4">
+                <span class="ml-3 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    ${{ event.price }}
+                </span>
+            </div>
+        </div>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="rounded-md bg-red-50 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">
+                                Please correct the errors below
+                            </h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <ul class="list-disc pl-5 space-y-1">
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        First name
+                    </label>
+                    <div class="mt-1">
+                        <input type="text" name="{{ form.f_name.html_name }}" id="{{ form.f_name.id_for_label }}" 
+                               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md {% if form.first_name.errors %}border-red-300{% endif %}"
+                               value="{{ form.f_name.value|default:'' }}">
+                    </div>
+                    {% if form.first_name.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.first_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label for="{{ form.l_name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Last name
+                    </label>
+                    <div class="mt-1">
+                        <input type="text" name="{{ form.l_name.html_name }}" id="{{ form.l_name.id_for_label }}" 
+                               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md {% if form.last_name.errors %}border-red-300{% endif %}"
+                               value="{{ form.l_name.value|default:'' }}">
+                    </div>
+                    {% if form.l_name.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.last_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="sm:col-span-4">
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Email address
+                    </label>
+                    <div class="mt-1">
+                        <input type="email" name="{{ form.email.html_name }}" id="{{ form.email.id_for_label }}" 
+                               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md {% if form.email.errors %}border-red-300{% endif %}"
+                               value="{{ form.email.value|default:'' }}">
+                    </div>
+                    {% if form.email.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label for="{{ form.special_requests.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Remarks
+                    </label>
+                    <div class="mt-1">
+                        <textarea name="{{ form.special_requests.html_name }}" id="{{ form.special_requests.id_for_label }}" rows="3" 
+                                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md {% if form.special_requests.errors %}border-red-300{% endif %}">{{ form.special_requests.value|default:'' }}</textarea>
+                    </div>
+                    {% if form.special_requests.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.special_requests.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="sm:col-span-6">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input type="checkbox" name="{{ form.agree_to_terms.html_name }}" id="{{ form.agree_to_terms.id_for_label }}" 
+                                   class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded {% if form.agree_to_terms.errors %}border-red-300{% endif %}"
+                                   {% if form.agree_to_terms.value %}checked{% endif %}>
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="{{ form.agree_to_terms.id_for_label }}" class="font-medium text-gray-700">
+                                I agree to the terms and conditions
+                            </label>
+                            <p class="text-gray-500">By registering, you agree to our <a href="#" class="text-indigo-600 hover:text-indigo-500">Terms of Service</a> and <a href="#" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>.</p>
+                        </div>
+                    </div>
+                    {% if form.agree_to_terms.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.agree_to_terms.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="pt-5">
+                <div class="flex justify-end">
+                    <a href="{% url 'events' %}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Cancel
+                    </a>
+                    <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

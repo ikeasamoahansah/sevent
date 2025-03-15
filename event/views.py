@@ -10,7 +10,7 @@ from .helper_functions import *
 def home(request):
     return render(request, "event/home.html", {"events": Event.objects.all().order_by('-created_at')})
 
-@login_required(login_url='/login')
+@login_required(login_url='/admin')
 def add_event(request):
     if request.method == "POST":
         form = EventForm(request.POST, request.FILES)
@@ -24,7 +24,6 @@ def add_event(request):
     return render(request, 'event/add.html', {"form":form})
 
 
-@login_required(login_url='/login')
 def view_event(request, event_id):
     event= get_object_or_404(Event, id=event_id)
     context = {
@@ -41,12 +40,12 @@ def register_event(request, event_id):
             reg = form.save(commit=False)
             reg.event = event
             reg.save()
-            return redirect("home/")
+            return redirect("/")
     else:
         form = EventRegistrationForm()
-    return render(request, 'event/registration.html', {"form":form})
+    return render(request, 'event/registration.html', {"form":form, "event": event})
 
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('/')
